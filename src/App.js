@@ -1,25 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { Container, Flex, Box } from '@chakra-ui/react';
+import './App.css'
+import Main from './components/main/Main';
 function App() {
+  // 2. Wrap ChakraProvider at the root of your app
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Container bg={'#f8fafd'} maxW={'Container.3xl'} height={'100vh'} p={'0'}>
+      <Flex height={'full'}>
+        <Box height={'full'} flex={5} w={['20%', '30%', '40%', '50%', '60%']}>
+          <Main />
+        </Box>
+      </Flex>
+    </Container>
+  )
 }
 
 export default App;
