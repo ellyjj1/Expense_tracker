@@ -24,8 +24,6 @@ function AddTransaction({ onClose, isOpen }) {
     function handleSubmit(event) {
         event.preventDefault(); // Prevent form from reloading the page
 
-        console.log(formData);
-
         let data = JSON.stringify({
             "description": formData.description,
             "amount": formData.amount,
@@ -44,7 +42,6 @@ function AddTransaction({ onClose, isOpen }) {
           
           axios.request(config)
           .then((response) => {
-            console.log("Transaction added:", response.data);
             setformData({ description: '', amount: '', type: 'expense' });
             onClose();
             window.location.reload()
