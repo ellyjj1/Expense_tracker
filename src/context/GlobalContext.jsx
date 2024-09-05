@@ -1,9 +1,9 @@
-import { useState, createContext } from "react";
+import { useState, createContext} from "react";
 
 export const GlobalContext = createContext(null);
 
-export default function GlobalState({ children }) {
 
+export default function GlobalState({ children }) {
     const [formData, setformData] = useState({
         type: "expense",
         amount: 0,
@@ -14,16 +14,16 @@ export default function GlobalState({ children }) {
     const [totalExpense, settotalExpense] = useState(0);
     const [totalIncome, settotalIncome] = useState(0);
     const [allTransactions, setallTransactions] = useState([]);
+    const baseURL = 'https://expense-tracker-backend-navy.vercel.app/api';
+
+
+
+
 
     function handleFormSubmit(currentFormData) {
-        console.log(currentFormData);
-
         if (!currentFormData.description || !currentFormData.amount) return;
-
         setallTransactions([...allTransactions, { ...currentFormData, id: Date.now() }]);
     }
-
-    console.log(allTransactions);
 
 
     return (
@@ -40,6 +40,7 @@ export default function GlobalState({ children }) {
                 allTransactions,
                 setallTransactions,
                 handleFormSubmit,
+                baseURL
             }}>
             {children}
         </GlobalContext.Provider>

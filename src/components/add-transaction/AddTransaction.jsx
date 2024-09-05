@@ -1,13 +1,20 @@
 import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup } from '@chakra-ui/react'
-import React, { useContext } from 'react'
+import React, { useContext, useState} from 'react'
 import { GlobalContext } from '../../context/GlobalContext'
+import axios from 'axios'
 
 
 function AddTransaction({ onClose, isOpen }) {
 
-    const { formData, setformData, value, setvalue, handleFormSubmit } = useContext(GlobalContext);
+    const { baseURL } = useContext(GlobalContext);
 
-    function handleFormhange(event) {
+    const [formData, setformData] = useState({
+        description: '',
+        amount: 0,
+        type: 'expense'
+    });
+
+    function handleFormChange(event) {
         setformData({
             ...formData,
             [event.target.name]: event.target.value
@@ -15,8 +22,36 @@ function AddTransaction({ onClose, isOpen }) {
     }
 
     function handleSubmit(event) {
-        event.preventDefault();
-        handleFormSubmit(formData);
+        event.preventDefault(); // Prevent form from reloading the page
+
+        console.log(formData);
+
+        let data = JSON.stringify({
+            "description": formData.description,
+            "amount": formData.amount,
+            "type": formData.type
+          });
+          
+          let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: baseURL + '/transactions/',
+            headers: { 
+              'Content-Type': 'application/json'
+            },
+            data : data
+          };
+          
+          axios.request(config)
+          .then((response) => {
+            console.log("Transaction added:", response.data);
+            setformData({ description: '', amount: '', type: 'expense' });
+            onClose();
+            window.location.reload()
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     }
 
     return (
@@ -33,7 +68,8 @@ function AddTransaction({ onClose, isOpen }) {
                                 placeholder='Enter Description'
                                 name='description'
                                 type='text'
-                                onChange={handleFormhange}
+                                value={formData.description}  // Bind to state
+                                onChange={handleFormChange}
                             />
                         </FormControl>
                         <FormControl>
@@ -42,21 +78,22 @@ function AddTransaction({ onClose, isOpen }) {
                                 placeholder='Enter Amount'
                                 name='amount'
                                 type='number'
-                                onChange={handleFormhange}
+                                value={formData.amount}
+                                onChange={handleFormChange}
                             />
                         </FormControl>
-                        <RadioGroup mt="5" value={value} onChange={setvalue}>
+                        <RadioGroup mt="5" value={formData.type} onChange={setformData}>
                             <Radio
-                                checked={formData.type === 'income'}
+                                
                                 value='income' colorScheme='blue' name='type'
-                                onChange={handleFormhange}
+                                onChange={handleFormChange}
                             >
                                 Income
                             </Radio>
                             <Radio
-                                checked={formData.type === 'expense'}
+                                
                                 value="expense" colorScheme='red' name='type'
-                                onChange={handleFormhange}
+                                onChange={handleFormChange}
                                 ml="4"
                             >
                                 Expense
@@ -64,7 +101,7 @@ function AddTransaction({ onClose, isOpen }) {
                         </RadioGroup>
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" onClick={onClose} mr={"3"} type='submit'>Add</Button>
+                        <Button colorScheme="blue" onClick={onClose}  mr={"3"} type='submit'>Add</Button>
                         <Button onClick={onClose}>Cancel</Button>
 
                     </ModalFooter>

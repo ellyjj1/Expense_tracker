@@ -3,24 +3,30 @@ import { Button, Flex, Heading, useDisclosure } from '@chakra-ui/react'
 import Summary from '../summary/Summary'
 import ExpenseView from '../expense-view/ExpenseView'
 import { GlobalContext } from '../../context/GlobalContext'
+import axios from 'axios'
 
 export default function Main() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { totalIncome, settotalIncome, totalExpense, settotalExpense, allTransactions } = useContext(GlobalContext)
+  const { totalIncome, settotalIncome, totalExpense, settotalExpense, baseURL } = useContext(GlobalContext)
 
   useEffect(() => {
-    let income = 0;
-    let expense = 0;
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: baseURL + '/transactions/totals/',
+      headers: {}
+    };
 
-    allTransactions.forEach(item => {
-      item.type === "income" ? (income += parseFloat(item.amount)) : (expense += parseFloat(item.amount))
-    })
-
-    settotalIncome(income)
-    settotalExpense(expense)
-
-  }, [allTransactions, settotalIncome, settotalExpense])
+    axios.request(config)
+      .then((response) => {
+        settotalIncome(response.data.total_income)
+        settotalExpense(response.data.total_expense)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [baseURL, settotalIncome,settotalExpense])
 
   return (
     <Flex textAlign='center' flexDirection={'column '} pr={'5'} pl={'5'}>
@@ -44,14 +50,8 @@ export default function Main() {
 
 
       <Flex w="full" alignItems={"flex-start"} justifyContent={"space-evenly"} flexDirection={["column", "column", "column", "row", "row"]}>
-        <ExpenseView
-          data={allTransactions.filter(item => item.type === "income")}
-          type="income"
-        />
-        <ExpenseView
-          data={allTransactions.filter(item => item.type === "expense")}
-          type="expense"
-        />
+        <ExpenseView />
+
       </Flex>
     </Flex>
   )
