@@ -1,6 +1,7 @@
 # Expense Tracker
 
-An interactive web application to help users track their income and expenses. but till now I did not do the backend, so will optimize this app later.
+An interactive web application to help users track their income and expenses. till now the performance need to optimize, i will do it later.
+the backend link: https://github.com/ellyjj1/Expense_tracker_backend
 
 ## Technologies Used
 
@@ -8,6 +9,7 @@ An interactive web application to help users track their income and expenses. bu
 - **Chakra UI**: A simple, modular and accessible component library for React, but the document and the search function of it need to optimize.
 - **ApexCharts**: Modern & Interactive open-source charts
 - **Context API**: For state management across the application
+- **Axios**: Used for making HTTP requests to the backend API.
 
 ## State Management
 
